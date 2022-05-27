@@ -2,16 +2,15 @@ package ru.netology.javacore;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.Map;
 
 public class TodoServer {
 
     int port;
-    private final Todos todos;
+    private Todos todos;
 
     public TodoServer(int port, Todos todos) {
         this.port = port;
@@ -31,12 +30,12 @@ public class TodoServer {
                     out.println("Введите строку типа: \"type\": \"ADD\", \"task\": \"Название задачи\"");
                     GsonBuilder builder = new GsonBuilder();
                     Gson gson = builder.create();
-                    Todos request = gson.fromJson(in.readLine(), Todos.class);
-                    switch(request.getType()){
-                        case "ADD": todos.addTask(request.getTask());
+                    Map request = gson.fromJson(in.readLine(), Map.class);
+                    switch(request.get("type").toString()){
+                        case "ADD": todos.addTask(request.get("task").toString());
                             out.println(todos.getAllTasks());
                             continue;
-                        case "REMOVE": todos.removeTask(request.getTask());
+                        case "REMOVE": todos.removeTask(request.get("task").toString());
                             out.println(todos.getAllTasks());
                     }
                 }
